@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>wiki骨架</title>
+    <style>
+        .top {
+            height: 80px;
+            background: rgb(166, 184, 88);
+        }
+
+        .main-cont {
+            display: flex;
+            height: 100%;
+            /* flex-direction: row; */
+        }
+
+        .main-aside {
+            /* flex: 1; */
+            flex: 0 0 200px;
+            background: #58C9B9;
+        }
+
+        .main-article {
+            padding: 10px;
+            background: #9DC8C8;
+            flex: 1;
+        }
+
+        .hr {
+            border-bottom: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top">
+        <!-- <h1>wiki骨架</h1> -->
+    </div>
+    <main class="main-cont">
+        <aside class="main-aside">
+            左侧导航栏
+        </aside>
+        <article class="main-article">
+            <hgroup>
+                <h1 class="hr">World Wide Web </h1>
+                <h2>From Wikipedia, the free encyclopedia</h2>
+            </hgroup>
+            <section>
+                <p>
+                    <abbr title="WWW">www</abbr>
+                    缩写
+                </p>
+                <p>时间引用<time>2019-04-20</time></p>
+
+                <p>
+                    <q>引用</q>
+                    <blockquote>引用块</blockquote>
+                    <cite> 引用内容</cite>
+                </p>
+                <p>
+                    <figure>
+                        <img
+                            src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2803988245,695884414&fm=26&gp=0.jpg" />
+                        <figcaption>插画</figcaption>
+                    </figure>
+                    <dfn>
+                        术语
+                    </dfn>
+                </p>
+            </section>
+            <section>
+                <p>
+                    A global map of the web index for countries in 2014
+                    <strong>The World Wide Web (WWW)</strong>, also called <strong>the Web</strong>,
+                    The World Wide Web, also known as the WWW and the Web, is an information space where documents and
+                    other web resources are identified by Uniform Resource Locators (URLs), interlinked by hypertext
+                    links, and accessible via the Internet.[1] English scientist Tim Berners-Lee invented the World Wide
+                    Web in 1989. He wrote the first web browser in 1990 while employed at CERN near Geneva,
+                    Switzerland.[2][3] The browser was released outside CERN in 1991, first to other research
+                    institutions starting in January 1991 and to the general public on the Internet in August 1991.
+                </p>
+                <p>
+
+                </p>
+            </section>
+            <section>
+                <nav>
+                    <h2>Contents</h2>
+                    <ol>
+                        <li><a href="...">History</a></li>
+                        <li><a href="...">Function</a>
+                            <ol>
+                                <li><a href="...">Linking</a></li>
+                                <li><a href="...">Dynamic updates of web pages</a></li>
+                                ...
+                            </ol>
+                        </li>
+                        ...
+                    </ol>
+                </nav>
+
+            </section>
+
+            <section>
+                <pre>
+                        <samp>
+                            GET /home.html HTTP/1.1
+                            Host: www.example.org
+                            </samp>
+                        </pre>
+                        <pre><code>
+                                &lt;html&gt;
+                                  &lt;head&gt;
+                                    &lt;title&gt;Example.org – The World Wide Web&lt;/title&gt;
+                                  &lt;/head&gt;
+                                  &lt;body&gt;
+                                    &lt;p&gt;The World Wide Web, abbreviated as WWW and commonly known ...&lt;/p&gt;
+                                  &lt;/body&gt;
+                                &lt;/html&gt;
+                                </code></pre>
+                                
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
