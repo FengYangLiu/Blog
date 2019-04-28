@@ -1,0 +1,223 @@
+# 05 | JavaScript类型：关于类型，有哪些你不知道的细节？
+
+## 问题
+
+- 为什么有的编程规范要求用 void 0代替 undefined？
+- 字符串有最大长度吗？
+- 0.1 + 0.2 不是等于 0.3 么？为什么 JavaScript 里不是这样的？
+- ES6 新加入的 Symbol 是个什么东西？
+- 为什么给对象添加的方法能用在基本类型上？
+
+## js中的7种原始类型
+1. undefiend
+2. null
+3. boolean
+4. string
+5. number
+6. symbol
+7. object
+
+### 为什么有的编程规范要求使用void 0代替undefined
+
+- undefined：定义了没有赋值。undefined在window对象上是的一个变量它的值为`undefiend`
+- null: 指向为空，没有定义的意思,在JS中是一个关键词
+- void：是一个运算符，可以吧运算的结果转换为undefined。
+
+由于undefined在js中是一个变量，并不是关键字, 所以可以修改它，虽然现代浏览器将它不可修改等操作但是通过闭包还是能进行修改，所有使用void 0更加安全，因为最后得出的总是undefined
+
+```
+var undefined = 1;
+cosnole.log(undefined) //undefinde
+
+(()=>{
+    var undefined = 1;
+    cosnole.log(undefined) //1
+})()
+```
+
+### 字符串有最大长度吗？
+
+字符串有最大长度，最大长度为：2^53-1
+
+字符串的长度由字符串的字符编码决定，之所以一个字符占一个长度是因为目前常用的编码为utf16编码
+
+字符串被生成后就无法更改，具有值的特性
+
+###  0.1 + 0.2 不是等于 0.3 么？为什么 JavaScript 里不是这样的？
+首先js采用双精度浮点数规则
+
+所以和大多数采用双精度浮点规则的编程语言一样存在缺失精度的问题
+
+JavaScript中双精度浮点数例外的例子
+1. NAN： 表示一个数字，自己不等于自己
+2. Infinity： 无穷大
+3. -Infinity： 负无穷大
+
+正负无穷主要是看一个数除以+0或者-0来获取
+
+双精度问题是无法避免的，但是可以通过比较来判断
+```
+  console.log( Math.abs(0.1 + 0.2 - 0.3) <= Number.EPSILON);
+
+```
+
+###  ES6 新加入的 Symbol 是个什么东西？
+
+Symbol： es6新引入的一种数据类型，它是一切非字符串的对象 key 的集合，整个对象系统就是用了Symbol来重塑
+
+
+
+给对象 o 添加了 Symbol.iterator对进行for...of...操作会根据给的函数规则进行操作
+
+```
+    var o = {a:1}
+
+    o[Symbol.iterator] = function() {
+        var v = 0
+        return {
+            next: function() {
+                return { value: v++, done: v > 10 }
+            }
+        }        
+    };
+
+    for(var v of o) 
+        console.log(v); // 0 1 2 3 ... 9
+
+```
+
+### 为什么给对象添加的方法能用在基本类型上？
+
+首先Object是JS的核心，也是最难的点之一
+
+对象是一个属性的集合，属性可以是数据属性和访问器属性，以key-value的形式来存储，key可以是字符串也可以是symbol类型
+
+js的类是运行时的一个私有属性
+
+Number/String/Boolean/Symbol 这个四个基础类型除了Symbol都可以两用，通过new来创建实例化，或者通过普通函数来强制转换，Symbol不能通过new来实例话否则会报错
+
+```
+var n = 3; // number
+var n = new Number(3) // object
+
+
+// 基础类型可以调用
+console.log("abc".charAt(0)); //a
+
+```
+
+Symbol不能通过new来创建实例话但是依然可以通过prototype来操作
+```
+Symbol.prototype.hello = () => console.log("hello");
+
+var a = Symbol("a");
+console.log(typeof a); //symbol，a 并非对象
+a.hello(); //hello，有效
+
+```
+
+至于为什么能在基本类型上添加方法是因为增加方法的操作会对对象进行装箱操作，它会对基本类型进行临时创建一个对象，是我们在临时操作是对这个对象进行操作
+
+**类型转化**
+
+对于类型转换，在 == 的时候会进行类型转化,所以一般会有先强制转换后使用===来进行比较的规定。
+作者说这个类型转换是一个设计失误，但是我认为这个失误已经成为历史，要么规避它，要么了解它。
+
+作者给出类型转换的图：
+![类型转换的图](https://raw.githubusercontent.com/FengYangLiu/blog/master/images/%E9%87%8D%E5%AD%A6%E5%89%8D%E7%AB%AF/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E8%BF%87%E7%A8%8B%E5%AF%B9%E7%85%A7%E8%A1%A8.jpg)
+
+**StringToNumber**
+
+字符串表示数字的方式可以有各种进制或者科学计数法
+```
+parseInt('1e3')
+//1
+parseInt('-1e-2')
+//-1
+Number('-1e-2')
+//-0.01
+Number('1e3')
+//1000
+```
+所以一般使用Number比ParseInt好
+
+**NumberToString**
+
+在较小的范围内会有完全符合十进制的表示，但是字符过大时或变成科学计数法
+
+**装箱操作**
+
+可以参考这篇文章
+[JS 基本类型之装箱操作](https://juejin.im/post/5cbaf130518825325050fb0a)
+
+每一种基本类型都会在对象里存在一个对应的类，所谓装箱转换正是将基础类型转换成对应对象
+
+通过function 与call来返回一个sympol的装箱对象
+```
+    var symbolObject = (function(){ return this; }).call(Symbol("a"));
+
+    console.log(typeof symbolObject); //object
+    console.log(symbolObject instanceof Symbol); //true
+    console.log(symbolObject.constructor == Symbol); //true
+
+```
+
+频繁装箱会则会损耗性能，建议少装箱
+
+
+没一个装箱对象都有私有Class属性，这些属性可以通过Object.proptotype.toString
+
+```
+    var symbolObject = Object(Symbol("a"));
+
+    console.log(Object.prototype.toString.call(symbolObject)); //[object Symbol]
+
+```
+Object.prototype.toString 是可以准确识别对象的对象的基础对象的方法，它比instanceof更加准确
+call 本身会产生装箱操作，所以需要配合 typeof 来操作
+
+**拆箱转换**
+
+在 JavaScript 标准中，规定了 ToPrimitive 函数，它是对象类型到基本类型的转换（即，拆箱转换）
+
+```
+    var o = {
+        valueOf : () => {console.log("valueOf"); return {}},
+        toString : () => {console.log("toString"); return {}}
+    }
+
+    o * 2
+    // valueOf
+    // toString
+    // TypeError
+
+
+   String(o)
+    // toString
+    // valueOf
+    // TypeError
+    
+
+
+    o[Symbol.toPrimitive] = () => {console.log("toPrimitive"); return "hello"}
+
+
+    console.log(o + "")
+    // toPrimitive
+    // hello
+
+
+```
+拆箱转换会尝试调用 valueOf 和 toString 来获得拆箱后的基本类型。如果 valueOf 和 toString 都不存在，或者没有返回基本类型，则会产生类型错误 TypeError。
+
+到 String 的拆箱转换会优先调用 toString。我们把刚才的运算从 o*2 换成 String(o)，那么你会看到调用顺序就变了。
+
+在 ES6 之后，还允许对象通过显式指定 @@toPrimitive Symbol 来覆盖原有的行为。
+
+### typeof运行时对照表
+
+![typeof运行时对照表](https://raw.githubusercontent.com/FengYangLiu/blog/master/images/%E9%87%8D%E5%AD%A6%E5%89%8D%E7%AB%AF/typeof%E8%BF%90%E8%A1%8C%E6%97%B6%E8%BD%AC%E6%8D%A2%E5%AF%B9%E7%85%A7%E8%A1%A8.png)
+
+注意typeof的null和function在运行时都是对象
+
+typeof 存在缺陷，但是过了这个时间
